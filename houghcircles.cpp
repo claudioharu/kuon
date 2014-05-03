@@ -47,9 +47,9 @@ int main(int argc, char** argv)
       std::cout << bgrRadius << "," << center.x+radius << "," << center.y << "\n";
       
       // circle center
-      //circle( src, center, 3, Scalar(0,255,0), -1, 8, 0 );
+      circle( src, center, 3, Scalar(0,255,0), -1, 8, 0 );
       // circle outline
-      //circle( src, center, radius, Scalar(0,0,255), 3, 8, 0 );
+      circle( src, center, radius, Scalar(0,0,255), 3, 8, 0 );
    }
 
   /// Show your results
