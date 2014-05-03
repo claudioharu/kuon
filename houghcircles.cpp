@@ -5,8 +5,6 @@
 
 using namespace cv;
 
-template <typename T>  void printMatTemplate(const Mat& M, bool isInt = true);
-void printMat(const Mat& M);
 
 /** @function main */
 int main(int argc, char** argv)
