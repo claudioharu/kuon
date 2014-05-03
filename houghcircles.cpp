@@ -38,13 +38,18 @@ int main(int argc, char** argv)
       Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
       int radius = cvRound(circles[i][2]);
       
-      Vec3b bgrPixel = src.at<Vec3b>(center.y, center.x);
-      std::cout << bgrPixel << "," << center.x << "," << center.y << "\n";
+      ///center color information
+      Vec3b bgrCenter = src.at<Vec3b>(center.y, center.x);
+      std::cout << bgrCenter << "," << center.x << "," << center.y << "\n";
+      
+      ///radius color information
+      Vec3b bgrRadius = src.at<Vec3b>(center.y, center.x+radius);
+      std::cout << bgrRadius << "," << center.x+radius << "," << center.y << "\n";
       
       // circle center
-      circle( src, center, 3, Scalar(0,255,0), -1, 8, 0 );
+      //circle( src, center, 3, Scalar(0,255,0), -1, 8, 0 );
       // circle outline
-      circle( src, center, radius, Scalar(0,0,255), 3, 8, 0 );
+      //circle( src, center, radius, Scalar(0,0,255), 3, 8, 0 );
    }
 
   /// Show your results
