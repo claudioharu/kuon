@@ -1,0 +1,121 @@
+moedas1.jpg ---> R$ 5,50
+VALORES    QUANTIDADE
+R$ 0,01        
+R$ 0,05        
+R$ 0,10
+R$ 0,25       2
+R$ 0,50       2
+R$ 1,00       4
+
+moedas2.jpg ---> R$ 5,00
+VALORES    QUANTIDADE
+R$ 0,01
+R$ 0,05       1
+R$ 0,10       2
+R$ 0,25       3
+R$ 0,50       3
+R$ 1,00       2
+
+moedas3.jpg ---> R$ 3,10
+VALORES    QUANTIDADE
+R$ 0,01
+R$ 0,05       6
+R$ 0,10       8
+R$ 0,25
+R$ 0,50       4
+R$ 1,00
+
+moedas4.jpg ---> R$ 4,35
+VALORES    QUANTIDADE
+R$ 0,01
+R$ 0,05       7
+R$ 0,10       10
+R$ 0,25
+R$ 0,50       4
+R$ 1,00       1
+
+moedas5.jpg ---> R$ 4,65
+VALORES    QUANTIDADE
+R$ 0,01       
+R$ 0,05        4
+R$ 0,10        2
+R$ 0,25        3
+R$ 0,50        3
+R$ 1,00        2
+
+moedas6.jpg ---> R$ 4,80
+VALORES    QUANTIDADE
+R$ 0,01
+R$ 0,05        2
+R$ 0,10        7
+R$ 0,25        4
+R$ 0,50        2
+R$ 1,00        2
+
+moedas7.jpg ---> R$ 4,50
+VALORES    QUANTIDADE
+R$ 0,01
+R$ 0,05       4
+R$ 0,10       8
+R$ 0,25       2
+R$ 0,50       2
+R$ 1,00       2
+
+moedas8.jpg ---> R$ 6,60
+VALORES    QUANTIDADE
+R$ 0,01
+R$ 0,05       4
+R$ 0,10       9
+R$ 0,25       6
+R$ 0,50       2
+R$ 1,00       3
+
+moedas9.jpg ---> R$ 5,60
+VALORES    QUANTIDADE
+R$ 0,01
+R$ 0,05        4
+R$ 0,10        9
+R$ 0,25        4
+R$ 0,50        3
+R$ 1,00        2
+
+moedas10.jpg ---> R$ 4,80
+VALORES    QUANTIDADE
+$ 0,02         2 
+$ 0,10         1
+R$ 0,01
+R$ 0,05        4
+R$ 0,10        6
+R$ 0,25        2
+R$ 0,50        3
+R$ 1,00        2
+
+moedas11.jpg ---> R$ 3,80
+VALORES    QUANTIDADE
+$ 0,02         2 
+$ 0,10         1
+R$ 0,01
+R$ 0,05        4
+R$ 0,10        6
+R$ 0,25        2
+R$ 0,50        3
+R$ 1,00        1
+
+moedas12.jpg ---> R$ 2,45
+VALORES    QUANTIDADE
+R$ 0,01
+R$ 0,05        5
+R$ 0,10        7
+R$ 0,25
+R$ 0,50        3
+R$ 1,00
+
+moedas13.jpg ---> R$ 4,35
+VALORES    QUANTIDADE
+R$ 0,01
+R$ 0,05        7  
+R$ 0,10        10
+R$ 0,25
+R$ 0,50        4
+R$ 1,00        1
+
