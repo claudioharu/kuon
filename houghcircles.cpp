@@ -54,13 +54,13 @@ cv::Mat colorReduce(const cv::Mat &image, int levels) {
 /**Detection of R$1,00**/
 bool detect1Real(unsigned long centerColor, unsigned long radiusColor, int radius)
 {
-	if (radius >= 143 && radius <= 154)
-	{
+	//if (radius >= 143 && radius <= 154)
+	//{
 		if(centerColor == 0)
 			if (radiusColor > 0) return true;
 			else return false;
-	}
-	else return false;
+	//}
+	//else return false;
 }
 
 /**Detection of R$0,50**/

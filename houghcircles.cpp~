@@ -51,8 +51,8 @@ cv::Mat colorReduce(const cv::Mat &image, int levels) {
     return reduced;
 }
 
-/**Detection of 1R$**/
-bool oneReal(unsigned long centerColor, unsigned long radiusColor, int radius)
+/**Detection of R$1,00**/
+bool detect1Real(unsigned long centerColor, unsigned long radiusColor, int radius)
 {
 	if (radius >= 143 && radius <= 154)
 	{
@@ -63,8 +63,8 @@ bool oneReal(unsigned long centerColor, unsigned long radiusColor, int radius)
 	else return false;
 }
 
-/**Detection of 0,50R$**/
-bool halfReal(unsigned long centerColor, unsigned long radiusColor, int radius)
+/**Detection of R$0,50**/
+bool detect50Cent(unsigned long centerColor, unsigned long radiusColor, int radius)
 {
 	//if (radius >= 120 && radius <= 135)
 	//{
@@ -125,8 +125,8 @@ int main(int argc, char** argv)
       /// Store the rgb channels into a single number
       unsigned long bgrRadiusHsv2long = rgb2long(bgrRadiusHsv[0], bgrRadiusHsv[1], bgrRadiusHsv[2]);
      
-      std::cout << "Eh Um real? " << oneReal(bgrCenterHsv2long, bgrRadiusHsv2long, radius) <<"\n";
-      std::cout << "Eh 50 centavos? " << halfReal(bgrCenterHsv2long, bgrRadiusHsv2long, radius) <<"\n\n";
+      std::cout << "Eh Um real? " << detect1Real(bgrCenterHsv2long, bgrRadiusHsv2long, radius) <<"\n";
+      std::cout << "Eh 50 centavos? " << detect50Cent(bgrCenterHsv2long, bgrRadiusHsv2long, radius) <<"\n\n";
       
       // circle center
       circle( src_hsv, center, 3, Scalar(255,0,0), -1, 8, 0 );
