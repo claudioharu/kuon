@@ -14,7 +14,7 @@ unsigned long rgb2long(int r, int g, int b)
 /** function main */
 int main(int argc, char** argv)
 {
-  Mat src, src_gray, src_hsv;
+  Mat src, src_gray, src_hsv, src_olhando;
 
   /// Read the image
   src = imread( argv[1], 1 );
@@ -32,8 +32,9 @@ int main(int argc, char** argv)
   cvtColor( src, src_hsv, CV_BGR2HSV );
 
   /// Reduce the noise so we avoid false circle detection
-  //GaussianBlur( src_gray, src_gray, Size(9, 9), 2, 2 );
-
+  //GaussianBlur( src_hsv, src_hsv, Size(9, 9), 2, 2 );
+  medianBlur(src_hsv, src_hsv, 5);
+  
   vector<Vec3f> circles;
 
   /// Apply the Hough Transform to find the circles
@@ -45,23 +46,35 @@ int main(int argc, char** argv)
       Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
       int radius = cvRound(circles[i][2]);
       
-      /// Center color information
-      Vec3i bgrCenter = src.at<Vec3b>(center.y, center.x);
+      /// Center color information 
+      //Vec3i bgrCenter = src.at<Vec3b>(center.y, center.x);
+      
+      /// Center color information hsv
+      Vec3i bgrCenterHsv = src_hsv.at<Vec3b>(center.y, center.x);
 
       /// Store the rgb channels into a single number
-      unsigned long bgrCenter2long = rgb2long(bgrCenter[0], bgrCenter[1], bgrCenter[2]);
+      unsigned long bgrCenterHsv2long = rgb2long(bgrCenterHsv[0], bgrCenterHsv[1], bgrCenterHsv[2]);
       
-      std::cout << "rgb: "<< bgrCenter2long << "," << center.x << "," << center.y << "\n";
+      std::cout << "rgb: "<< bgrCenterHsv2long << "	," << center.x << "," << center.y << "\n";
       //std::cout << "hue: "<< hsvCenter[0] << "," << center.x << "," << center.y << "\n";
       
       /// Radius color information
-      Vec3b bgrRadius = src.at<Vec3b>(center.y, center.x+radius);
-      std::cout << bgrRadius << "," << center.x+radius << "," << center.y << " radius: "<< radius<<"\n\n";
+      //Vec3b bgrRadius = src.at<Vec3b>(center.y, center.x+radius);
+      
+       /// Radius color information hsv
+      Vec3b bgrRadiusHsv = src_hsv.at<Vec3b>(center.y, center.x+radius);
+      
+      /// Store the rgb channels into a single number
+      unsigned long bgrRadiusHsv2long = rgb2long(bgrRadiusHsv[0], bgrRadiusHsv[1], bgrRadiusHsv[2]);
+      
+      std::cout << "rgb: "<< bgrRadiusHsv2long << "	," << center.x+radius << "," << center.y << " radius: "<< radius<<"\n\n";
+      
+      //std::cout << bgrRadius << "," << center.x+radius << "," << center.y << " radius: "<< radius<<"\n\n";
       
       // circle center
       circle( src, center, 3, Scalar(0,255,0), -1, 8, 0 );
       // circle outline
-      circle( src, center, radius, Scalar(0,0,255), 3, 8, 0 );
+      //circle( src, center, radius, Scalar(0,0,255), 3, 8, 0 );
    }
 
   /// Show your results
