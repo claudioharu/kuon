@@ -11,6 +11,20 @@ unsigned long rgb2long(int r, int g, int b)
     return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
 }
 
+
+/**Detection of 1R$**/
+bool oneReal(unsigned long centerColor, unsigned long radiusColor, int radius)
+{
+	if (radius >= 148 && radius <= 154)
+	{
+		unsigned long sub = centerColor - radiusColor;
+		if (sub < 0) sub = -sub;
+		if (sub > 100000) return true;
+		else return false;
+	}
+	else return false;
+}
+
 /** function main */
 int main(int argc, char** argv)
 {
@@ -69,17 +83,18 @@ int main(int argc, char** argv)
       
       std::cout << "rgb: "<< bgrRadiusHsv2long << "	," << center.x+radius << "," << center.y << " radius: "<< radius<<"\n\n";
       
+      std::cout << "Eh Um real:" << oneReal(bgrCenterHsv2long, bgrRadiusHsv2long, radius) <<"\n\n";
       //std::cout << bgrRadius << "," << center.x+radius << "," << center.y << " radius: "<< radius<<"\n\n";
       
       // circle center
       circle( src, center, 3, Scalar(0,255,0), -1, 8, 0 );
       // circle outline
-      //circle( src, center, radius, Scalar(0,0,255), 3, 8, 0 );
+      circle( src, center, radius, Scalar(0,0,255), 3, 8, 0 );
    }
 
   /// Show your results
   namedWindow( "Hough Circle Transform Demo", CV_WINDOW_NORMAL );
-  imshow( "Hough Circle Transform Demo", src_hsv );
+  imshow( "Hough Circle Transform Demo", src );
 
   waitKey(0);
   return 0;
