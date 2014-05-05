@@ -5,8 +5,13 @@
 
 using namespace cv;
 
+/** function rgb2hex: store the bits of the three channels into a single number*/
+unsigned long rgb2long(int r, int g, int b)
+{   
+    return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+}
 
-/** @function main */
+/** function main */
 int main(int argc, char** argv)
 {
   Mat src, src_gray, src_hsv;
@@ -17,10 +22,13 @@ int main(int argc, char** argv)
   if( !src.data )
     { return -1; }
 
+  /// Reduce the noise so we avoid false circle detection
   medianBlur(src, src, 5);
 
   /// Convert it to gray
   cvtColor( src, src_gray, CV_BGR2GRAY );
+
+  /// Convert it to hsv
   cvtColor( src, src_hsv, CV_BGR2HSV );
 
   /// Reduce the noise so we avoid false circle detection
@@ -37,12 +45,16 @@ int main(int argc, char** argv)
       Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
       int radius = cvRound(circles[i][2]);
       
+      /// Center color information
+      Vec3i bgrCenter = src.at<Vec3b>(center.y, center.x);
+
+      /// Store the rgb channels into a single number
+      unsigned long bgrCenter2long = rgb2long(bgrCenter[0], bgrCenter[1], bgrCenter[2]);
       
-      ///center color information
-      Vec3b bgrCenter = src.at<Vec3b>(center.y, center.x);
-      std::cout << bgrCenter << "," << center.x << "," << center.y << "\n";
+      std::cout << "rgb: "<< bgrCenter2long << "," << center.x << "," << center.y << "\n";
+      //std::cout << "hue: "<< hsvCenter[0] << "," << center.x << "," << center.y << "\n";
       
-      ///radius color information
+      /// Radius color information
       Vec3b bgrRadius = src.at<Vec3b>(center.y, center.x+radius);
       std::cout << bgrRadius << "," << center.x+radius << "," << center.y << " radius: "<< radius<<"\n\n";
       
