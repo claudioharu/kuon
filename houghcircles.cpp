@@ -15,12 +15,13 @@ unsigned long rgb2long(int r, int g, int b)
 /**Detection of 1R$**/
 bool oneReal(unsigned long centerColor, unsigned long radiusColor, int radius)
 {
-	if (radius >= 148 && radius <= 154)
+	if (radius >= 143 && radius <= 154)
 	{
-		unsigned long sub = centerColor - radiusColor;
-		if (sub < 0) sub = -sub;
-		if (sub > 100000) return true;
-		else return false;
+		return true;
+		//unsigned long sub = centerColor - radiusColor;
+		//if (sub < 0) sub = -sub;
+		//if (sub > 100000) return true;
+		//else return false;
 	}
 	else return false;
 }
