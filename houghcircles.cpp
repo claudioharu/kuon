@@ -54,26 +54,18 @@ cv::Mat colorReduce(const cv::Mat &image, int levels) {
 /**Detection of R$1,00**/
 bool detect1Real(unsigned long centerColor, unsigned long radiusColor, int radius)
 {
-	//if (radius >= 143 && radius <= 154)
-	//{
-		if(centerColor == 0)
-			if (radiusColor > 0) return true;
-			else return false;
-	//}
-	//else return false;
+	if(centerColor == 0)
+		if (radiusColor > 0) return true;
+		else return false;
 }
 
 /**Detection of R$0,50**/
 bool detect50Cent(unsigned long centerColor, unsigned long radiusColor, int radius)
 {
-	//if (radius >= 120 && radius <= 135)
-	//{
-		if(centerColor == 0)
-			if (radiusColor == 0) return true;
-			else return false;
+	if(centerColor == 0)
+		if (radiusColor == 0) return true;
 		else return false;
-	//}
-	//else return false;
+	else return false;
 }
 
 /** function main */
@@ -101,6 +93,11 @@ int main(int argc, char** argv)
 
   /// Reduce the number of colors in an image
   src_hsv = colorReduce(src_hsv, 2);
+    
+  
+  /// Canny detector
+  Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size );
+
   
   vector<Vec3f> circles;
 
@@ -126,7 +123,7 @@ int main(int argc, char** argv)
       unsigned long bgrRadiusHsv2long = rgb2long(bgrRadiusHsv[0], bgrRadiusHsv[1], bgrRadiusHsv[2]);
      
       std::cout << "Eh Um real? " << detect1Real(bgrCenterHsv2long, bgrRadiusHsv2long, radius) <<"\n";
-      std::cout << "Eh 50 centavos? " << detect50Cent(bgrCenterHsv2long, bgrRadiusHsv2long, radius) <<"\n\n";
+      std::cout << "Eh 50 centavos? " << detect50Cent(bgrCenterHsv2long, bgrRadiusHsv2long, radius-1) <<"\n\n";
       
       // circle center
       circle( src_hsv, center, 3, Scalar(255,0,0), -1, 8, 0 );
