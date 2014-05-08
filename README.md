@@ -1,3 +1,3 @@
 Kuon
-====
-detection of brazilian coins
+=============================
+Detection of Brazilian coins
