@@ -10,6 +10,7 @@ using namespace cv;
 
 Mat src, src_gray;
 Mat dst;
+MatND hist_base[6];
 
 void circleDetection(int, void*)
 {
@@ -33,7 +34,6 @@ void circleDetection(int, void*)
 	vector<Vec3f> circles;
 	HoughCircles( src_gray, circles, CV_HOUGH_GRADIENT, 1, 220, 50, 20, 100, 165 );
 
-	//char* name = "../../images/Gray_Image";
 	char buffer[40];
 	char name[100];
 	/// Draw the circles detected
@@ -42,11 +42,24 @@ void circleDetection(int, void*)
 		Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
 		int radius = cvRound(circles[i][2]);
 
-		cv::Mat eyeImg = src(cv::Rect(center.x - radius, // ROI x-offset, left coordinate
-								center.y - radius, // ROI y-offset, top coordinate 
-								2*radius,          // ROI width
-								2*radius));        // ROI height
-
+		cv::Mat eyeImg;
+		
+		try
+		{
+			eyeImg = src(cv::Rect(center.x - radius, // ROI x-offset, left coordinate
+									center.y - radius, // ROI y-offset, top coordinate 
+									2*radius,          // ROI width
+									2*radius));        // ROI height
+		}
+		catch (cv::Exception e)
+		{
+			
+			radius -= 10;
+			eyeImg = src(cv::Rect(center.x - radius, // ROI x-offset, left coordinate
+									center.y - radius, // ROI y-offset, top coordinate 
+									2*radius,          // ROI width
+									2*radius));        // ROI height
+		}
 
 		sprintf(buffer, "%ld", i);
 		strcpy(name, "CoinsImage");
@@ -61,15 +74,54 @@ void circleDetection(int, void*)
 		memset(name,0,100);
 
 		// circle center
-		circle( src, center, 3, Scalar(255,0,0), -1, 8, 0 );
+		//circle( src, center, 3, Scalar(255,0,0), -1, 8, 0 );
 
 		//circle outline
-		circle( src, center, radius, Scalar(255,0,0), 3, 8, 0 );
+		//circle( src, center, radius, Scalar(255,0,0), 3, 8, 0 );
 	}
 	//imwrite("coins.png", src);
 	imshow( "Coin Detector", src );
 }
 
+void histogram()
+{
+	Mat src_base, hsv_base;
+	/// Histograms
+	
+	char name[100];
+	char buffer[40];
+	int i;
+	for(i = 0; i < 5; i++)
+	{
+		sprintf(buffer, "%d", i);
+		strcpy(name, "Coins");
+		strcat(name,buffer);
+		strcat(name, ".JPG");
+		src =imread( name );
+		memset(buffer, 0, 40);
+		memset(name,0,100);
+		
+		/// Convert to HSV
+		cvtColor( src_base, hsv_base, COLOR_BGR2HSV );
+
+		/// Using 50 bins for hue and 60 for saturation
+		int h_bins = 50; int s_bins = 60;
+		int histSize[] = { h_bins, s_bins };
+
+		// hue varies from 0 to 179, saturation from 0 to 255
+		float h_ranges[] = { 0, 180 };
+		float s_ranges[] = { 0, 256 };
+
+		const float* ranges[] = { h_ranges, s_ranges };
+
+		// Use the o-th and 1-st channels
+		int channels[] = { 0, 1 };
+
+		/// Calculate the histograms for the HSV images
+		calcHist( &hsv_base, 1, channels, Mat(), hist_base[i], 2, histSize, ranges, true, false );
+		normalize( hist_base[i], hist_base[i], 0, 1, NORM_MINMAX, -1, Mat() );
+	}
+}
 
 int main( int argc, char** argv )
 {
