@@ -107,6 +107,8 @@ void baseHistogram()
 		
 		src_base =imread( name );
 		
+		//blur( src_base, src_base, Size(5,5), Point(-1,-1) );
+		//medianBlur(src_base, src_base, 51);
 		//std::cout << name <<"\n";
 		
 		memset(buffer, 0, 40);
@@ -155,6 +157,22 @@ void compareHistogram()
 		strcat(name, ".JPG");
 		
 		src_base = imread(name);
+		//blur( src_base, src_base, Size(5,5), Point(-1,-1) );
+		//medianBlur(src_base, src_base, 51);
+		
+		 /// Do the operation new_image(i,j) = alpha*image(i,j) + beta
+		for( int y = 0; y < src_base.rows; y++ )
+		{ 
+			for( int x = 0; x < src_base.cols; x++ )
+			{ 
+				for( int c = 0; c < 3; c++ )
+				{
+					src_base.at<Vec3b>(y,x)[c] =
+					saturate_cast<uchar>( 1.12*( src_base.at<Vec3b>(y,x)[c] ) + 18 );
+				}
+			}
+		}
+		
 		
 		memset(buffer, 0, 40);
 		memset(name,0,100);
@@ -182,7 +200,7 @@ void compareHistogram()
 		calcHist( &hsv_base, 1, channels, Mat(), hist_coin, 2, histSize, ranges, true, false );
 		normalize( hist_coin, hist_coin, 0, 1, NORM_MINMAX, -1, Mat() );
 		
-		
+		int k;
 		printf("************************\n");
 		for(int j = 0; j < 5; j++)
 		{
@@ -190,9 +208,32 @@ void compareHistogram()
 			int compare_method = 0;
 			double base_coin = compareHist( hist_coin, hist_base[j], 0 );
 			if(similarity[i] < base_coin)
+			{
 				similarity[i] = base_coin;
-			printf( " Method [%d] Perfect, Base-Half, Base-Test(1) : %f\n", 0, base_coin);
+				switch (j)
+				{
+					case 0:
+						k = 1;
+						break;
+					case 1:
+						k = 10;
+						break;
+					case 2:
+						k = 5;
+						break;
+					case 3:
+						k = 50;
+						break;
+					case 4:
+						k = 25;
+						break;
+				}
+				
+				
+			}
+			//printf( " Method [%d] Perfect, Base-Half, Base-Test(1) : %f\n", 0, base_coin);
 		}
+		printf("Coins: %d\n", k);
 		printf("************************\n");
 	}
 	for(long int i = 0; i <= numCoins; i++)
