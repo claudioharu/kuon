@@ -67,7 +67,7 @@ void circleDetection(int, void*)
 		strcat(name,buffer);
 		strcat(name, ".JPG");
 
-		std::cout<<name<<"\n";
+		//std::cout<<name<<"\n";
 				
 		imwrite( name, eyeImg );
 
@@ -93,17 +93,21 @@ void histogram()
 	
 	char name[100];
 	char buffer[40];
-	int i;
-	for(i = 0; i < 5; i++)
+	
+	for(int i = 0; i < 5; i++)
 	{
 		sprintf(buffer, "%d", i);
-		strcpy(name, "Coins");
+		strcpy(name, "Coin");
 		strcat(name,buffer);
 		strcat(name, ".JPG");
-		src =imread( name );
+		
+		src_base =imread( name );
+		
+		//std::cout << name <<"\n";
+		
 		memset(buffer, 0, 40);
 		memset(name,0,100);
-		
+				
 		/// Convert to HSV
 		cvtColor( src_base, hsv_base, COLOR_BGR2HSV );
 
@@ -123,14 +127,16 @@ void histogram()
 		/// Calculate the histograms for the HSV images
 		calcHist( &hsv_base, 1, channels, Mat(), hist_base[i], 2, histSize, ranges, true, false );
 		normalize( hist_base[i], hist_base[i], 0, 1, NORM_MINMAX, -1, Mat() );
+		
 	}
+	
 }
 
 void compareHistogram()
 {
 	char buffer[40];
 	char name[100];
-	for(long int i; i < numCoins; i++)
+	for(long int i; i < numCoins+1; i++)
 	{
 		Mat src_base, hsv_base;
 		
@@ -141,6 +147,9 @@ void compareHistogram()
 		
 		src_base = imread(name);
 		
+		memset(buffer, 0, 40);
+		memset(name,0,100);
+				
 		/// Convert to HSV
 		cvtColor( src_base, hsv_base, COLOR_BGR2HSV );
 		
@@ -164,23 +173,22 @@ void compareHistogram()
 		calcHist( &hsv_base, 1, channels, Mat(), hist_coin, 2, histSize, ranges, true, false );
 		normalize( hist_coin, hist_coin, 0, 1, NORM_MINMAX, -1, Mat() );
 		
-		//Alterar para o numero certo de moedas predefinidas
-		for(int j = 0; j < 6; j++)
+		printf("************************\n");
+		for(int j = 0; j < 5; j++)
 		{
 			/// Apply the histogram comparison methods
-			for( int k = 0; k < 4; k++ )
-			{
-				int compare_method = k;
-				double base_coin = compareHist( hist_coin, hist_base[j], compare_method );
-
-				printf( " Method [%d] Perfect, Base-Half, Base-Test(1), Base-Test(2) : %f\n", k, base_coin);
-			}
+			int compare_method = 0;
+			double base_coin = compareHist( hist_coin, hist_base[j], 0 );
+			printf( " Method [%d] Perfect, Base-Half, Base-Test(1) : %f\n", 0, base_coin);
 		}
+		printf("************************\n");
 	}
 }
 
 int main( int argc, char** argv )
 {
+	histogram();
+
 	/// Load an image
 	src = imread( argv[1] );
 
@@ -198,6 +206,8 @@ int main( int argc, char** argv )
 
 	/// Detect the circles and show the image
 	circleDetection(0, 0);
+	
+	compareHistogram();
 
 	/// Wait until user exit program by pressing a key
 	waitKey(0);
