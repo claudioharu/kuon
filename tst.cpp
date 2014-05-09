@@ -11,6 +11,9 @@ using namespace cv;
 Mat src, src_gray;
 Mat dst;
 MatND hist_base[6];
+int baseRadius[6];
+int Radius[100];
+
 long int numCoins;
 
 void circleDetection(int, void*)
@@ -42,6 +45,7 @@ void circleDetection(int, void*)
 	{
 		Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
 		int radius = cvRound(circles[i][2]);
+		Radius[i] = cvRound(circles[i][2]);
 
 		cv::Mat eyeImg;
 		
@@ -86,7 +90,7 @@ void circleDetection(int, void*)
 	imshow( "Coin Detector", src );
 }
 
-void histogram()
+void baseHistogram()
 {
 	Mat src_base, hsv_base;
 	/// Histograms
@@ -136,7 +140,12 @@ void compareHistogram()
 {
 	char buffer[40];
 	char name[100];
-	for(long int i; i < numCoins+1; i++)
+	double similarity[numCoins+1];
+	
+	for(long int i = 0; i <numCoins+1; i++)
+		similarity[i] = 0.0;
+		
+	for(long int i = 0; i < numCoins+1; i++)
 	{
 		Mat src_base, hsv_base;
 		
@@ -173,24 +182,29 @@ void compareHistogram()
 		calcHist( &hsv_base, 1, channels, Mat(), hist_coin, 2, histSize, ranges, true, false );
 		normalize( hist_coin, hist_coin, 0, 1, NORM_MINMAX, -1, Mat() );
 		
+		
 		printf("************************\n");
 		for(int j = 0; j < 5; j++)
 		{
 			/// Apply the histogram comparison methods
 			int compare_method = 0;
 			double base_coin = compareHist( hist_coin, hist_base[j], 0 );
+			if(similarity[i] < base_coin)
+				similarity[i] = base_coin;
 			printf( " Method [%d] Perfect, Base-Half, Base-Test(1) : %f\n", 0, base_coin);
 		}
 		printf("************************\n");
 	}
+	for(long int i = 0; i <= numCoins; i++)
+		printf("%f\n", similarity[i]);
 }
 
 int main( int argc, char** argv )
 {
-	histogram();
-
 	/// Load an image
 	src = imread( argv[1] );
+	
+	baseHistogram();
 
 	if( !src.data )
 	{ return -1; }
