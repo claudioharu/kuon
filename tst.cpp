@@ -176,7 +176,6 @@ void compareHistogram()
 				printf( " Method [%d] Perfect, Base-Half, Base-Test(1), Base-Test(2) : %f\n", k, base_coin);
 			}
 		}
-
 	}
 }
 
