@@ -11,6 +11,7 @@ using namespace cv;
 Mat src, src_gray;
 Mat dst;
 MatND hist_base[6];
+long int numCoins;
 
 void circleDetection(int, void*)
 {
@@ -72,13 +73,15 @@ void circleDetection(int, void*)
 
 		memset(buffer, 0, 40);
 		memset(name,0,100);
-
+		numCoins = i;
 		// circle center
 		//circle( src, center, 3, Scalar(255,0,0), -1, 8, 0 );
 
 		//circle outline
 		//circle( src, center, radius, Scalar(255,0,0), 3, 8, 0 );
 	}
+	
+	
 	//imwrite("coins.png", src);
 	imshow( "Coin Detector", src );
 }
@@ -120,6 +123,60 @@ void histogram()
 		/// Calculate the histograms for the HSV images
 		calcHist( &hsv_base, 1, channels, Mat(), hist_base[i], 2, histSize, ranges, true, false );
 		normalize( hist_base[i], hist_base[i], 0, 1, NORM_MINMAX, -1, Mat() );
+	}
+}
+
+void compareHistogram()
+{
+	char buffer[40];
+	char name[100];
+	for(long int i; i < numCoins; i++)
+	{
+		Mat src_base, hsv_base;
+		
+		sprintf(buffer, "%ld", i);
+		strcpy(name, "CoinsImage");
+		strcat(name,buffer);
+		strcat(name, ".JPG");
+		
+		src_base = imread(name);
+		
+		/// Convert to HSV
+		cvtColor( src_base, hsv_base, COLOR_BGR2HSV );
+		
+		/// Using 50 bins for hue and 60 for saturation
+		int h_bins = 50; int s_bins = 60;
+		int histSize[] = { h_bins, s_bins };
+
+		// hue varies from 0 to 179, saturation from 0 to 255
+		float h_ranges[] = { 0, 180 };
+		float s_ranges[] = { 0, 256 };
+
+		const float* ranges[] = { h_ranges, s_ranges };
+
+		// Use the o-th and 1-st channels
+		int channels[] = { 0, 1 };
+
+		/// Histograms
+		MatND hist_coin;
+		
+		/// Calculate the histograms for the HSV images
+		calcHist( &hsv_base, 1, channels, Mat(), hist_coin, 2, histSize, ranges, true, false );
+		normalize( hist_coin, hist_coin, 0, 1, NORM_MINMAX, -1, Mat() );
+		
+		//Alterar para o numero certo de moedas predefinidas
+		for(int j = 0; j < 6; j++)
+		{
+			/// Apply the histogram comparison methods
+			for( int k = 0; k < 4; k++ )
+			{
+				int compare_method = k;
+				double base_coin = compareHist( hist_coin, hist_base[j], compare_method );
+
+				printf( " Method [%d] Perfect, Base-Half, Base-Test(1), Base-Test(2) : %f\n", k, base_coin);
+			}
+		}
+
 	}
 }
 
