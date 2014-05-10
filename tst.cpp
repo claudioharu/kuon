@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
+#include <time.h>
 #define Max 9000
 
 using namespace cv;
@@ -26,15 +27,15 @@ void circleDetection(int, void*)
 
 	//Binarization
 	threshold( src_gray, src_gray, 145, 255, THRESH_BINARY_INV );
-	//imwrite("coinsThreshold.png", src_gray);
+	imwrite("coinsThreshold.png", src_gray);
 
 	//Blur the image so we can avoid noise
 	blur( src_gray, src_gray, Size(5,5) );
-	//imwrite("coinsBlur.png", src_gray);
+	imwrite("coinsBlur.png", src_gray);
 
 	//Erosion followed by dilation
 	morphologyEx(src_gray, src_gray, MORPH_OPEN , getStructuringElement(MORPH_RECT, Size(5,5), Point(-1,-1)),Point(-1,-1), 13);
-	//imwrite("coinsEroDil.png", src_gray);
+	imwrite("coinsEroDil.png", src_gray);
 
 	vector<Vec3f> circles;
 	HoughCircles( src_gray, circles, CV_HOUGH_GRADIENT, 1, 220, 50, 20, 100, 165 );
@@ -59,8 +60,8 @@ void circleDetection(int, void*)
 		}
 		catch (cv::Exception e)
 		{
-			
-			radius -= 10;
+			//OLHAR SE TIRA
+			radius -= 10; //radius /= 2
 			eyeImg = src(cv::Rect(center.x - radius, // ROI x-offset, left coordinate
 									center.y - radius, // ROI y-offset, top coordinate 
 									2*radius,          // ROI width
@@ -72,7 +73,7 @@ void circleDetection(int, void*)
 		strcat(name,buffer);
 		strcat(name, ".JPG");
 
-		//std::cout<<name<<"\n";
+		//std::cout<<name<<"\n";''
 				
 		imwrite( name, eyeImg );
 
@@ -80,15 +81,15 @@ void circleDetection(int, void*)
 		memset(name,0,100);
 		numCoins = i;
 		// circle center
-		//circle( src, center, 3, Scalar(255,0,0), -1, 8, 0 );
+		circle( src, center, 3, Scalar(255,0,0), -1, 8, 0 );
 
 		//circle outline
-		//circle( src, center, radius, Scalar(255,0,0), 3, 8, 0 );
+		circle( src, center, radius, Scalar(255,0,0), 3, 8, 0 );
 	}
 	
 	
-	//imwrite("coins.png", src);
-	imshow( "Coin Detector", src );
+	imwrite("coins.png", src);
+	//imshow( "Coin Detector", src );
 }
 
 void baseHistogram()
@@ -145,6 +146,7 @@ void compareHistogram()
 	char buffer[40];
 	char name[100];
 	double similarity[numCoins+1];
+	double coins = 0.0;
 	
 	for(long int i = 0; i <numCoins+1; i++)
 		similarity[i] = 0.0;
@@ -207,11 +209,13 @@ void compareHistogram()
 		int sub = Max;
 		for (int j = 0; j < 5; j++)
 		{
-			int aux = baseRadius[j] - src_base.cols;
+			int aux = abs(baseRadius[j] - src_base.cols);
 			if(sub >= aux)
 			{
+				sub = aux;
 				l = aux;
-				printf("j: %d, l: %d\n", j, l);
+				//printf("j: %d, l: %d\n", j, l);
+				l = j;
 			}
 		}
 		
@@ -224,40 +228,61 @@ void compareHistogram()
 			if(similarity[i] < base_coin)
 			{
 				similarity[i] = base_coin;
-				/*switch (j)
-				{
-					case 0:
-						k = 1;
-						break;
-					case 1:
-						k = 10;
-						break;
-					case 2:
-						k = 5;
-						break;
-					case 3:
-						k = 50;
-						break;
-					case 4:
-						k = 25;
-						break;
-				}*/
-				
-				
+				k = j;
 			}
 			//printf( " Method [%d] Perfect, Base-Half, Base-Test(1) : %f\n", 0, base_coin);
 		}
-		printf("Coins: %d\n", k);
-		printf("************************\n");
+		//printf("%d\n", which);
+		
+		//tiebreaker
+		if(k != l)
+		{			
+			if((rand() % 2) == 0)
+				k = l;
+		}
+		
+		switch (k)
+		{	
+			case 0:
+				printf("Coins: %d\n", 1);
+				coins += 1.0;
+				break;
+			case 1:
+				printf("Coins: %d\n", 10);
+				coins += 0.10;
+				break;
+			case 2:
+				printf("Coins: %d\n", 5);
+				coins += 0.05;
+				break;
+			case 3:
+				printf("Coins: %d\n", 50);
+				coins += 0.50;
+				break;
+			case 4:
+				printf("Coins: %d\n", 25);
+				coins += 0.25;
+				break;
+		}	
+		
+		
+		//printf("************************\n");
 	}
+	
+	/*
 	for(long int i = 0; i <= numCoins; i++)
 		printf("%f\n", similarity[i]);
+	*/
+
+	printf("Total: %f\n", coins);
 }
 
 int main( int argc, char** argv )
 {
 	/// Load an image
 	src = imread( argv[1] );
+	
+	srand (time(NULL));
 	
 	baseHistogram();
 
@@ -269,17 +294,18 @@ int main( int argc, char** argv )
 
 	/// Convert the image to grayscale
 	cvtColor( src, src_gray, CV_BGR2GRAY );
+	//imwrite("coinsGrayScale.png", src_gray);
 
 	/// Create a window
 	namedWindow( "Coin Detector", CV_WINDOW_NORMAL );
-
+	
 	/// Detect the circles and show the image
 	circleDetection(0, 0);
 	
 	compareHistogram();
 
 	/// Wait until user exit program by pressing a key
-	waitKey(0);
-
+	//waitKey(0);
+	
 	return 0;
 }
