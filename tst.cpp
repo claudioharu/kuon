@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
+#define Max 9000
 
 using namespace cv;
 /// Global variables
@@ -114,6 +115,7 @@ void baseHistogram()
 		memset(buffer, 0, 40);
 		memset(name,0,100);
 				
+		baseRadius[i] = src_base.cols;
 		/// Convert to HSV
 		cvtColor( src_base, hsv_base, COLOR_BGR2HSV );
 
@@ -201,6 +203,18 @@ void compareHistogram()
 		normalize( hist_coin, hist_coin, 0, 1, NORM_MINMAX, -1, Mat() );
 		
 		int k;
+		int l;
+		int sub = Max;
+		for (int j = 0; j < 5; j++)
+		{
+			int aux = baseRadius[j] - src_base.cols;
+			if(sub >= aux)
+			{
+				l = aux;
+				printf("j: %d, l: %d\n", j, l);
+			}
+		}
+		
 		printf("************************\n");
 		for(int j = 0; j < 5; j++)
 		{
@@ -210,7 +224,7 @@ void compareHistogram()
 			if(similarity[i] < base_coin)
 			{
 				similarity[i] = base_coin;
-				switch (j)
+				/*switch (j)
 				{
 					case 0:
 						k = 1;
@@ -227,7 +241,7 @@ void compareHistogram()
 					case 4:
 						k = 25;
 						break;
-				}
+				}*/
 				
 				
 			}
