@@ -207,8 +207,8 @@ void compareHistogram()
 		calcHist( &hsv_tst_coin, 1, channels, Mat(), hist_coin, 2, histSize, ranges, true, false );
 		normalize( hist_coin, hist_coin, 0, 1, NORM_MINMAX, -1, Mat() );
 		
-		int bestColor;
-		int bestSize;
+		int k;
+		int best;
 		int sub = Max;
 		for (int j = 0; j < 5; j++)
 		{
@@ -218,7 +218,7 @@ void compareHistogram()
 			{
 				sub = aux;
 				//printf("j: %d, dif: %d\n", j, sub);
-				bestSize = j;
+				best = j;
 			}
 		}
 		
@@ -232,20 +232,20 @@ void compareHistogram()
 			if(similarity[i] < base_coin)
 			{
 				similarity[i] = base_coin;
-				bestColor = j;
+				k = j;
 			}
 			//printf( " Method [%d] Perfect, Base-Half, Base-Test(1) : %f\n", 0, base_coin);
 		}
 		//printf("%d\n", which);
 		
 		//tiebreaker
-		/*if(k != bestSize)
+		/*if(k != best)
 		{			
 			if((rand() % 2) == 0)
-				k = bestSize;
+				k = best;
 		}
 		*/
-		switch (bestColor)
+		switch (k)
 		{	
 			case 0:
 				//printf("Coins: %d\n", 1);
