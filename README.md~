@@ -14,5 +14,5 @@ To compile, open the terminal and run "sh con.sh"
 
 Execution
 ============================
-To run, just type "./countCoins imageSource"
+To run, just type "./tst imageSource"
 

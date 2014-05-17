@@ -307,8 +307,10 @@ int main( int argc, char** argv )
 	/// Load an image
 	dst = imread( argv[1] );
 
+        // Sharpening
         GaussianBlur(dst, src, Size(0, 0), 5);
         addWeighted(dst, 2.5, src, -1.5, 0, src);
+        imwrite("coinsSharpening.png", src);
 
         //Change saturation
         // BGR to HSV
